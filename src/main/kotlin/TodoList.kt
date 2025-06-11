@@ -33,7 +33,26 @@ class TodoList {
     }
 
     fun getAllTasks(userId: Int): List<String> {
-        return emptyList()
+        if(!_userTasks.containsKey(userId)){
+            return emptyList()
+        }
+
+        // Filter user tasks for incompleted
+        val incompleteTasks = _userTasks[userId]!!
+            .filter { (_, value) -> !value.isCompleted }
+            .values
+
+        // Return early if all user tasks are complete
+        if(incompleteTasks.isEmpty()){
+            return emptyList()
+        }
+
+        // Map incompleted user task descriptions to list ordered by dueDate (asc)
+        val allTasks = incompleteTasks
+            .sortedBy { task -> task.dueDate }
+            .map { task -> task.description }
+
+        return allTasks
     }
 
     fun getTasksForTag(userId: Int, tag: String): List<String> {
