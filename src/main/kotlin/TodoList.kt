@@ -1,12 +1,17 @@
 package dev.hellofro
 
 class TodoList {
-    private val _userTasks = mutableMapOf<Int, MutableMap<Int, Task>>().withDefault { mutableMapOf() }
-    private val _tagIndex = mutableMapOf<String, MutableSet<UserTask>>().withDefault { mutableSetOf() }
+    private val _userTasks = mutableMapOf<Int, MutableMap<Int, Task>>()
+    private val _tagIndex = mutableMapOf<String, MutableSet<UserTask>>()
 
     fun addTask(userId: Int, taskDescription: String, dueDate: Int, tags: List<String>): Int {
+        // Create entry for user if not already in db
+        if(!_userTasks.containsKey(userId)){
+            _userTasks.put(userId, mutableMapOf())
+        }
+
         // Generate the task id
-        val taskId = (_userTasks[userId]?.size ?: 0) + 1
+        val taskId = _userTasks[userId]!!.size + 1
 
         // Create a new task for the user
         val newTask = Task(
@@ -17,7 +22,7 @@ class TodoList {
         )
 
         // Add the task to the users tasks by id
-        _userTasks[userId]?.put(taskId, newTask)
+        _userTasks[userId]!![taskId] = newTask
 
         // If it has tags add it to the tag index
         if(tags.isNotEmpty()){
