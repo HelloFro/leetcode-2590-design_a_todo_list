@@ -69,7 +69,7 @@ class TodoListTests {
                 expected = Expected(output = mutableListOf(null, 1))
             ),
             Test(
-                name = "Create TodoList then addTask two times",
+                name = "addTask multiple times for user",
                 given = Given(
                     functions = listOf(
                         Functions.InitTodoList,
@@ -84,7 +84,7 @@ class TodoListTests {
                 )
             ),
             Test(
-                name = "Create TodoList, 2x addTask, and getAllTasks",
+                name = "getAllTasks for user with two tasks",
                 given = Given(
                     functions = listOf(
                         Functions.InitTodoList,
@@ -100,7 +100,7 @@ class TodoListTests {
                 )
             ),
             Test(
-                name = "Create TodoList, 3x addTask, and getTasksForTag",
+                name = "getTasksForTag for a user with multiple tasks with tag",
                 given = Given(
                     functions = listOf(
                         Functions.InitTodoList,
@@ -117,19 +117,37 @@ class TodoListTests {
                 )
             ),
             Test(
-                name = "Test getTasksForTag when different users have the same tag",
+                name = "getTasksForTag when different users have the same tag",
                 given = Given(
                     functions = listOf(
                         Functions.InitTodoList,
                         Functions.AddTask(1, "Task1", 50, listOf("P1")),
                         Functions.AddTask(2, "Task2", 100, listOf("P1")),
-                        Functions.AddTask(3, "Task3", 30, listOf("P1")),
+                        Functions.AddTask(2, "Task3", 42, listOf("P1")),
+                        Functions.AddTask(3, "Task4", 30, listOf("P1")),
                         Functions.GetTasksForTag(2,"P1")
                     )
                 ),
                 expected = Expected(
                     output = mutableListOf(
-                        null, 1, 1, 1, listOf("Task2")
+                        null, 1, 1, 2, 1, listOf("Task3","Task2")
+                    )
+                )
+            ),
+            Test(
+                name = "getTasksForTag when user has no tasks with tag",
+                given = Given(
+                    functions = listOf(
+                        Functions.InitTodoList,
+                        Functions.AddTask(1, "Task1", 50, listOf("P0")),
+                        Functions.AddTask(1, "Task2", 100, listOf("P1")),
+                        Functions.AddTask(1, "Task3", 30, listOf("P3")),
+                        Functions.GetTasksForTag(1,"P2")
+                    )
+                ),
+                expected = Expected(
+                    output = mutableListOf(
+                        null, 1, 2, 3, emptyList<String>()
                     )
                 )
             ),
