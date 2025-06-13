@@ -32,15 +32,12 @@ class TodoList {
         return taskId
     }
 
+    /*
+    * Returns a list of all the tasks not marked as complete for the user with ID [userId], ordered by the due date.
+    * Returns an empty list if the user has no uncompleted tasks.
+    */
     fun getAllTasks(userId: Int): List<String> {
-        if(!_userTasks.containsKey(userId)){
-            return emptyList()
-        }
-
-        // Filter user tasks for incompleted
-        val incompleteTasks = _userTasks[userId]!!
-            .filter { (_, value) -> !value.isCompleted }
-            .values
+        val incompleteTasks = getIncompleteTasks(userId)
 
         // Return early if all user tasks are complete
         if(incompleteTasks.isEmpty()){
@@ -49,18 +46,50 @@ class TodoList {
 
         // Map incompleted user task descriptions to list ordered by dueDate (asc)
         val allTasks = incompleteTasks
-            .sortedBy { task -> task.dueDate }
+            .sortedByDueDate()
             .map { task -> task.description }
 
         return allTasks
     }
 
     fun getTasksForTag(userId: Int, tag: String): List<String> {
-        return emptyList()
+        val incompleteTasks = getIncompleteTasks(userId)
+
+        // Return early if all user tasks are complete
+        if(incompleteTasks.isEmpty()){
+            return emptyList()
+        }
+
+        // Map incompleted user task descriptions to list ordered by dueDate (asc)
+        val tasksWithTag = incompleteTasks
+            .filter { task -> task.tags.contains(tag) }
+            .sortedByDueDate()
+            .map { task -> task.description }
+
+        return tasksWithTag
     }
 
     fun completeTask(userId: Int, taskId: Int) {
 
+    }
+
+    private fun getIncompleteTasks(userId: Int): List<Task> {
+        if(!_userTasks.containsKey(userId)){
+            return emptyList()
+        }
+
+        // Filter user tasks for incompleted
+        return _userTasks[userId]!!
+            .filter { (_, value) -> !value.isCompleted }
+            .values.toList()
+    }
+
+    private fun List<Task>.sortedByDueDate(asc: Boolean = true) : List<Task> {
+        return if(asc) {
+            this.sortedBy { task -> task.dueDate }
+        } else {
+            this.sortedByDescending { task -> task.dueDate }
+        }
     }
 
     private fun indexTaskByTags(userId: Int, taskId: Int, tags: List<String>) {
