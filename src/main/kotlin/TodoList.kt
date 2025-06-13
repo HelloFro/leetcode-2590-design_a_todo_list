@@ -2,8 +2,13 @@ package dev.hellofro
 
 class TodoList {
     private val _userTasks = mutableMapOf<Int, MutableMap<Int, Task>>()
-    private val _tagIndex = mutableMapOf<String, MutableSet<UserTask>>()
 
+    /*
+    *  Adds a task for the user with the ID [userId] with a due date equal to [dueDate]
+    *  and a list of tags attached to the task. The return value is the ID of the task.
+    *  This ID starts at 1 and is sequentially increasing. That is, each user's first task's id should be 1,
+    *  the second task's id should be 2, and so on.
+    */
     fun addTask(userId: Int, taskDescription: String, dueDate: Int, tags: List<String>): Int {
         // Create entry for user if not already in db
         if(!_userTasks.containsKey(userId)){
@@ -23,11 +28,6 @@ class TodoList {
 
         // Add the task to the users tasks by id
         _userTasks[userId]!![taskId] = newTask
-
-        // If it has tags add it to the tag index
-        if(tags.isNotEmpty()){
-            indexTaskByTags(userId, taskId, tags)
-        }
 
         return taskId
     }
@@ -52,6 +52,11 @@ class TodoList {
         return allTasks
     }
 
+    /*
+    * Returns a list of all the tasks that are not marked as complete for the user with the ID [userId]
+    * and have [tag] as one of their tags, ordered by their due date.
+    * Returns an empty list if no such task exists.
+    */
     fun getTasksForTag(userId: Int, tag: String): List<String> {
         val incompleteTasks = getIncompleteTasks(userId)
 
@@ -69,6 +74,10 @@ class TodoList {
         return tasksWithTag
     }
 
+    /*
+    * Marks the task with the ID [taskId] as completed only if the task exists
+    * and the user with the ID [userId] has this task, and it is uncompleted.
+    */
     fun completeTask(userId: Int, taskId: Int) {
         val incompleteTasks = getIncompleteTasks(userId)
 
@@ -98,17 +107,8 @@ class TodoList {
     }
 
     private fun List<Task>.sortedByDueDate(asc: Boolean = true): List<Task> {
-        return if(asc) {
-            this.sortedBy { task -> task.dueDate }
-        } else {
-            this.sortedByDescending { task -> task.dueDate }
-        }
-    }
-
-    private fun indexTaskByTags(userId: Int, taskId: Int, tags: List<String>) {
-        for(tag in tags) {
-            _tagIndex[tag]?.add(UserTask(userId, taskId))
-        }
+        return if(asc) { this.sortedBy { task -> task.dueDate } }
+        else { this.sortedByDescending { task -> task.dueDate } }
     }
 
     private data class Task(
@@ -118,6 +118,4 @@ class TodoList {
         val isCompleted: Boolean = false,
         val tags: List<String> = emptyList()
     )
-
-    private data class UserTask(val userId: Int, val taskId: Int)
 }
