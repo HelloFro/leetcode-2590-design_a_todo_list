@@ -2,6 +2,7 @@ package dev.hellofro
 
 class TodoList {
     private val _userTasks = mutableMapOf<Int, MutableMap<Int, Task>>()
+    private var _taskCount = 0
 
     /*
     *  Adds a task for the user with the ID [userId] with a due date equal to [dueDate]
@@ -16,7 +17,7 @@ class TodoList {
         }
 
         // Generate the task id
-        val taskId = _userTasks[userId]!!.size + 1
+        val taskId = _taskCount + 1
 
         // Create a new task for the user
         val newTask = Task(
@@ -28,6 +29,8 @@ class TodoList {
 
         // Add the task to the users tasks by id
         _userTasks[userId]!![taskId] = newTask
+
+        _taskCount = taskId
 
         return taskId
     }

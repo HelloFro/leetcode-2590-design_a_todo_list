@@ -130,7 +130,7 @@ class TodoListTests {
                 ),
                 expected = Expected(
                     output = mutableListOf(
-                        null, 1, 1, 2, 1, listOf("Task3", "Task2")
+                        null, 1, 2, 3, 4, listOf("Task3", "Task2")
                     )
                 )
             ),
