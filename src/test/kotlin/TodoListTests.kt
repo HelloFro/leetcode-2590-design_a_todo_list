@@ -130,7 +130,7 @@ class TodoListTests {
                 ),
                 expected = Expected(
                     output = mutableListOf(
-                        null, 1, 1, 2, 1, listOf("Task3","Task2")
+                        null, 1, 1, 2, 1, listOf("Task3", "Task2")
                     )
                 )
             ),
@@ -148,6 +148,62 @@ class TodoListTests {
                 expected = Expected(
                     output = mutableListOf(
                         null, 1, 2, 3, emptyList<String>()
+                    )
+                )
+            ),
+            Test(
+                name = "completeTask for existing user and task",
+                given = Given(
+                    functions = listOf(
+                        Functions.InitTodoList,
+                        Functions.AddTask(1, "Task1", 50, listOf("P0")),
+                        Functions.AddTask(1, "Task2", 100, listOf("P1")),
+                        Functions.AddTask(1, "Task3", 30, listOf("P2")),
+                        Functions.CompleteTask(1,2),
+                        Functions.GetAllTasks(1)
+                    )
+                ),
+                expected = Expected(
+                    output = mutableListOf(
+                        null, 1, 2, 3, null, listOf("Task3", "Task1")
+                    )
+                )
+            ),
+            Test(
+                name = "completeTask for existing user but task is already completed",
+                given = Given(
+                    functions = listOf(
+                        Functions.InitTodoList,
+                        Functions.AddTask(1, "Task1", 50, listOf("P0")),
+                        Functions.AddTask(1, "Task2", 100, listOf("P1")),
+                        Functions.AddTask(1, "Task3", 30, listOf("P2")),
+                        Functions.CompleteTask(1,2),
+                        Functions.GetAllTasks(1),
+                        Functions.CompleteTask(1,2),
+                        Functions.GetAllTasks(1),
+                    )
+                ),
+                expected = Expected(
+                    output = mutableListOf(
+                        null, 1, 2, 3, null, listOf("Task3", "Task1"), null, listOf("Task3", "Task1")
+                    )
+                )
+            ),
+            Test(
+                name = "completeTask for existing user but task doesn't exist",
+                given = Given(
+                    functions = listOf(
+                        Functions.InitTodoList,
+                        Functions.AddTask(1, "Task1", 50, listOf("P0")),
+                        Functions.AddTask(1, "Task2", 100, listOf("P1")),
+                        Functions.AddTask(1, "Task3", 30, listOf("P2")),
+                        Functions.CompleteTask(1,7),
+                        Functions.GetAllTasks(1)
+                    )
+                ),
+                expected = Expected(
+                    output = mutableListOf(
+                        null, 1, 2, 3, null, listOf("Task3", "Task1", "Task2")
                     )
                 )
             ),
