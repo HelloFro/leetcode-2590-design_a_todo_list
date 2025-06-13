@@ -207,6 +207,30 @@ class TodoListTests {
                     )
                 )
             ),
+            Test(
+                name = "Test all function invocations as seen in explanation in README.md",
+                given = Given(
+                    functions = listOf(
+                        Functions.InitTodoList,
+                        Functions.AddTask(1, "Task1", 50, emptyList()),
+                        Functions.AddTask(1, "Task2", 100, listOf("P1")),
+                        Functions.GetAllTasks(1),
+                        Functions.GetAllTasks(5),
+                        Functions.AddTask(1, "Task3", 30, listOf("P1")),
+                        Functions.GetTasksForTag(1,"P1"),
+                        Functions.CompleteTask(5,1),
+                        Functions.CompleteTask(1,2),
+                        Functions.GetTasksForTag(1,"P1"),
+                        Functions.GetAllTasks(1)
+                    )
+                ),
+                expected = Expected(
+                    output = mutableListOf(
+                        null, 1, 2, listOf("Task1", "Task2"), emptyList<String>(), 3, listOf("Task3", "Task2"),
+                        null, null, listOf("Task3"), listOf("Task3", "Task1")
+                    )
+                )
+            ),
         )
     }
 
