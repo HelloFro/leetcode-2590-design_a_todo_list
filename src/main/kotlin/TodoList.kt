@@ -7,7 +7,7 @@ class TodoList {
     /*
     *  Adds a task for the user with the ID [userId] with a due date equal to [dueDate]
     *  and a list of tags attached to the task. The return value is the ID of the task.
-    *  This ID starts at 1 and is sequentially increasing. That is, each user's first task's id should be 1,
+    *  This ID starts at 1 and is sequentially increasing. That is, the first task's id should be 1,
     *  the second task's id should be 2, and so on.
     */
     fun addTask(userId: Int, taskDescription: String, dueDate: Int, tags: List<String>): Int {
