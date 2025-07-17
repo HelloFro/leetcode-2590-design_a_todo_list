@@ -1,6 +1,6 @@
 # 2590. Design a Todo List
 
-Design a Todo List Where users can add tasks, mark them as complete, or get a list of pending tasks. Users can also add tags to tasks and can filter the tasks by certain tags.
+Design a Todo List where users can add tasks, mark them as complete, or get a list of pending tasks. Users can also add tags to tasks and can filter the tasks by certain tags.
 
 Implement the `TodoList` class:
 
