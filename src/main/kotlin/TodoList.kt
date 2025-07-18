@@ -82,19 +82,11 @@ class TodoList {
     * and the user with the ID [userId] has this task, and it is uncompleted.
     */
     fun completeTask(userId: Int, taskId: Int) {
-        val incompleteTasks = getIncompleteTasks(userId)
+        val userTasks = _userTasks[userId] ?: return
+        val taskToUpdate = userTasks[taskId] ?: return
 
-        // Skip if all user tasks are complete
-        if(incompleteTasks.isEmpty()){
-            return
-        }
-
-        // Find task by id or null
-        val taskToUpdate = incompleteTasks.find { task -> task.id == taskId }
-
-        // Update task as complete
-        if (taskToUpdate != null){
-            _userTasks[userId]!![taskId] = taskToUpdate.copy(isCompleted = true)
+        if (!taskToUpdate.isCompleted) {
+            userTasks[taskId] = taskToUpdate.copy(isCompleted = true)
         }
     }
 
